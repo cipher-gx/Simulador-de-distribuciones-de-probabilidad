@@ -10,6 +10,7 @@ p = 0.8
 binomial = Binomial(n, p)
 
 print("Binomial:")
+print(f"Varianza: {binomial.varianza()}")
 print(f"Probabilidad de obtener exactamente 8 éxitos: {binomial.probabilidad_X(8):.6f}")
 
 
