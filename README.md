@@ -28,7 +28,7 @@ Desarrollado para la unidad de aprendizaje de **Probabilidad y Estadística** de
 ## 📸 Interfaz Gráfica
 
 ![Simulador](normal_sim.png)
-> *Convergencia empírica de la distribución Normal evaluando X < 55 con 100,000 iteraciones.*
+> 
 
 ---
 
