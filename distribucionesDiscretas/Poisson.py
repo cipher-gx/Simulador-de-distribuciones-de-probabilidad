@@ -29,12 +29,13 @@ class Poisson:
             prob += self.probabilidad_X(i)
         return prob
     
-    def simular_x1_a_x2(self, x1, x2, tamaño_muestra):
-        juegos = np.random.poisson(self.l, size=tamaño_muestra)
-        filtro = (juegos >= x1) & (juegos <= x2)
-        return np.sum(filtro) / tamaño_muestra
+    def simular_x1_a_x2(self, x1, x2, iteraciones):
+        simulaciones = np.random.poisson(self.l, size=iteraciones)
+        filtro = (simulaciones >= x1) & (simulaciones <= x2)
+        probabilidad_simulada = np.sum(filtro) / iteraciones
+        return probabilidad_simulada, simulaciones 
     
-    def evaluar_expresion(self, cadenaEntrada):
+    def evaluar_expresion(self, cadenaEntrada, iteraciones):
         reglas = [
             r"(?P<RANGO>\d+\s*<=\s*X\s*<=\s*\d+)",
             r"(?P<RANGO_INTERIOR>\d+\s*<\s*X\s*<\s*\d+)",
@@ -42,6 +43,7 @@ class Poisson:
             r"(?P<MENOR_IGUAL>X\s*<=\s*\d+)",
             r"(?P<MAYOR>X\s*>\s*\d+)",
             r"(?P<MENOR>X\s*<\s*\d+)",
+            r"(?P<IGUAL>X\s*=\s*\d+)",        
             r"(?P<PALABRA>[a-zA-Z]+)"
         ]
         
@@ -77,19 +79,24 @@ class Poisson:
             elif tipo_regla == "MENOR":
                 x = int(re.findall(r"\d+", texto_encontrado)[0])
                 x1, x2 = 0, x - 1 
+
+            elif tipo_regla == "IGUAL":
+                x = int(re.findall(r"\d+", texto_encontrado)[0])
+                x1, x2 = x, x
                 
             elif tipo_regla == "PALABRA":
                 continue
 
         
         if x1 is not None and x2 is not None:
-                if x2 == float('inf'):
-                    teorica = 1 - self.probabilidad_x1_a_x2(0, x1-1)
-                    simulada = 1 - self.simular_x1_a_x2(0, x1-1, 10000)
-                else:
-                    teorica = self.probabilidad_x1_a_x2(x1, x2)
-                    simulada = self.simular_x1_a_x2(x1, x2, 10000)
-                    
-                return teorica, simulada
+            if x2 == float('inf'):
+                teorica = 1 - self.probabilidad_x1_a_x2(0, x1-1)
+                simulada_inversa, arreglo_datos = self.simular_x1_a_x2(0, x1-1, iteraciones)
+                simulada = 1 - simulada_inversa
+            else:
+                teorica = self.probabilidad_x1_a_x2(x1, x2)
+                simulada, arreglo_datos = self.simular_x1_a_x2(x1, x2, iteraciones)
+                
+            return teorica, simulada, arreglo_datos
 
         raise ValueError("No se detecto ninguna expresion matematica valida")

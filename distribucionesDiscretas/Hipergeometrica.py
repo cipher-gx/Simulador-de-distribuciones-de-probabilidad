@@ -18,7 +18,7 @@ class Hipergeometrica:
         return math.sqrt(self.varianza())
     
     def probabilidad_X(self, x):
-        if x < 0 or x >= self.n:
+        if x < 0 or x > self.n:
             return 0
         else:
             return (math.comb(self.k, x) * math.comb(self.N - self.k, self.n - x)) / math.comb(self.N, self.n)
@@ -29,12 +29,13 @@ class Hipergeometrica:
             prob += self.probabilidad_X(i)
         return prob
     
-    def simular_x1_a_x2(self, x1, x2, tamaño_muestra):
-        juegos = np.random.hypergeometric(self.k, self.N - self.k, self.n, size=tamaño_muestra)
-        filtro = (juegos >= x1) & (juegos <= x2)
-        return np.sum(filtro) / tamaño_muestra
+    def simular_x1_a_x2(self, x1, x2, iteraciones):
+        simulaciones = np.random.hypergeometric(self.k, self.N - self.k, self.n, size=iteraciones)
+        filtro = (simulaciones >= x1) & (simulaciones <= x2)
+        probabilidad_simulada = np.sum(filtro) / iteraciones
+        return probabilidad_simulada, simulaciones 
     
-    def evaluar_expresion(self, cadenaEntrada):
+    def evaluar_expresion(self, cadenaEntrada, iteraciones):
         reglas = [
             r"(?P<RANGO>\d+\s*<=\s*X\s*<=\s*\d+)",
             r"(?P<RANGO_INTERIOR>\d+\s*<\s*X\s*<\s*\d+)",
@@ -42,6 +43,7 @@ class Hipergeometrica:
             r"(?P<MENOR_IGUAL>X\s*<=\s*\d+)",
             r"(?P<MAYOR>X\s*>\s*\d+)",
             r"(?P<MENOR>X\s*<\s*\d+)",
+            r"(?P<IGUAL>X\s*=\s*\d+)",        
             r"(?P<PALABRA>[a-zA-Z]+)"
         ]
         
@@ -76,14 +78,18 @@ class Hipergeometrica:
             elif tipo_regla == "MENOR":
                 x = int(re.findall(r"\d+", texto_encontrado)[0])
                 x1, x2 = 0, x - 1
+
+            elif tipo_regla == "IGUAL":
+                x = int(re.findall(r"\d+", texto_encontrado)[0])
+                x1, x2 = x, x
                 
             elif tipo_regla == "PALABRA":
                 continue
 
         if x1 is not None and x2 is not None:
-                teorica = self.probabilidad_x1_a_x2(x1, x2)
-                simulada = self.simular_x1_a_x2(x1, x2, 10000)
-                return teorica, simulada
+            teorica = self.probabilidad_x1_a_x2(x1, x2)
+            simulada, arreglo_datos = self.simular_x1_a_x2(x1, x2, iteraciones)
+            return teorica, simulada, arreglo_datos
 
         raise ValueError("No se detecto ninguna expresion matematica valida")
     
