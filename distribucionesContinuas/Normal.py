@@ -20,7 +20,17 @@ class Normal:
         return self.desviacion
 
     def probabilidad_X1_a_X2(self, x1, x2):
-        resultado, error = quad(self.distribucion_normal, x1, x2)
+        limite_inf = self.media - (10 * self.desviacion)
+        limite_sup = self.media + (10 * self.desviacion)
+        
+        x1_seguro = max(x1, limite_inf)
+        x2_seguro = min(x2, limite_sup)
+        
+        # Si la petición cae completamente fuera de la campana
+        if x1_seguro >= x2_seguro:
+            return 0.0
+            
+        resultado, error = quad(self.distribucion_normal, x1_seguro, x2_seguro)
         return resultado
     
     def simular_probabilidad(self, x1, x2, iteraciones):

@@ -1,6 +1,7 @@
 import sys
 import numpy as np
 from PyQt6 import QtWidgets, uic
+from PyQt6.QtCore import Qt  
 from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
 
@@ -63,11 +64,18 @@ class MiSimulador(QtWidgets.QMainWindow):
         self.lienzo = Lienzo(self)
         self.layout_grafica.addWidget(self.lienzo)
         
+        self.tabla_resultados.setRowCount(4)
+        self.tabla_resultados.setHorizontalHeaderLabels(["Teórico", "Simulado", "Diferencia"])
+        self.tabla_resultados.setVerticalHeaderLabels(["Probabilidad", "Media", "Varianza", "Desviación"])
+        self.tabla_resultados.setMinimumHeight(185)
+        self.tabla_resultados.horizontalHeader().setSectionResizeMode(QtWidgets.QHeaderView.ResizeMode.Stretch)
+        self.tabla_resultados.verticalHeader().setSectionResizeMode(QtWidgets.QHeaderView.ResizeMode.Stretch)
+        self.tabla_resultados.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        self.tabla_resultados.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        
         self.combo_distribuciones.currentIndexChanged.connect(self.cambiar_formulario)
         self.boton_calcular.clicked.connect(self.ejecutar_calculo)
         self.boton_exportar.clicked.connect(self.exportar_imagen)
-        
-        self.statusBar().showMessage("Motores matemáticos unificados enlazados correctamente.", 5000)
 
     def cambiar_formulario(self, indice):
         self.paginas_variables.setCurrentIndex(indice)
@@ -86,57 +94,65 @@ class MiSimulador(QtWidgets.QMainWindow):
         es_discreta = False
 
         try:
-            if indice == 0:    # Normal
+            if indice == 0:
                 instancia = Normal(self.spin_media.value(), self.spin_desviacion.value())
                 es_discreta = False
-                
-            elif indice == 1:  # Exponencial
+            elif indice == 1:
                 instancia = Exponencial(self.spin_lambda.value())
                 es_discreta = False
-                
-            elif indice == 2:  # Uniforme
+            elif indice == 2:
                 instancia = Uniforme(self.spin_a.value(), self.spin_b.value())
                 es_discreta = False
-                
-            elif indice == 3:  # Bernoulli
+            elif indice == 3:
                 instancia = Bernoulli(self.spin_p_ber.value())
                 es_discreta = True
-                
-            elif indice == 4:  # Binomial
+            elif indice == 4:
                 instancia = Binomial(self.spin_n_bin.value(), self.spin_p_bin.value())
                 es_discreta = True
-                
-            elif indice == 5:  # Geométrica
+            elif indice == 5:
                 instancia = Geometrica(self.spin_p_geo.value())
                 es_discreta = True
-                
-            elif indice == 6:  # Hipergeométrica 
-                instancia = Hipergeometrica(
-                    n=self.spin_n_muestra.value(), 
-                    k=self.spin_K_exitos.value(), 
-                    N=self.spin_N_pob.value()
-                )
+            elif indice == 6:
+                instancia = Hipergeometrica(n=self.spin_n_muestra.value(), k=self.spin_K_exitos.value(), N=self.spin_N_pob.value())
                 es_discreta = True
-                
-            elif indice == 7:  # Poisson
+            elif indice == 7:
                 instancia = Poisson(self.spin_lam_poi.value())
                 es_discreta = True
 
-
             teorica, simulada, datos_simulados = instancia.evaluar_expresion(texto_expresion, iteraciones_ui)
 
-            self.label_teorica.setText(f"Teórica: {teorica * 100:.4f} %")
-            self.label_simulada.setText(f"Simulada: {simulada * 100:.4f} %")
+            teo_media = instancia.esperanza() if hasattr(instancia, 'esperanza') else instancia.Esperanza()
+            teo_var = instancia.varianza() if hasattr(instancia, 'varianza') else instancia.Varianza()
+            teo_std = instancia.desviacion_estandar() if hasattr(instancia, 'desviacion_estandar') else instancia.Desviacion_Estandar()
+
+            sim_media = np.mean(datos_simulados) if len(datos_simulados) > 0 else 0
+            sim_var = np.var(datos_simulados) if len(datos_simulados) > 0 else 0
+            sim_std = np.std(datos_simulados) if len(datos_simulados) > 0 else 0
+
+            self.tabla_resultados.setItem(0, 0, QtWidgets.QTableWidgetItem(f"{teorica * 100:.4f} %"))
+            self.tabla_resultados.setItem(0, 1, QtWidgets.QTableWidgetItem(f"{simulada * 100:.4f} %"))
+            self.tabla_resultados.setItem(0, 2, QtWidgets.QTableWidgetItem(f"{abs(teorica - simulada) * 100:.4f} %"))
             
-            self.lienzo.actualizar_grafica(datos_simulados, es_discreta, titulo=f"Simulación Monte Carlo - {nombre_dist}")
+            self.tabla_resultados.setItem(1, 0, QtWidgets.QTableWidgetItem(f"{teo_media:.4f}"))
+            self.tabla_resultados.setItem(1, 1, QtWidgets.QTableWidgetItem(f"{sim_media:.4f}"))
+            self.tabla_resultados.setItem(1, 2, QtWidgets.QTableWidgetItem(f"{abs(teo_media - sim_media):.4f}"))
+            
+            self.tabla_resultados.setItem(2, 0, QtWidgets.QTableWidgetItem(f"{teo_var:.4f}"))
+            self.tabla_resultados.setItem(2, 1, QtWidgets.QTableWidgetItem(f"{sim_var:.4f}"))
+            self.tabla_resultados.setItem(2, 2, QtWidgets.QTableWidgetItem(f"{abs(teo_var - sim_var):.4f}"))
+            
+            self.tabla_resultados.setItem(3, 0, QtWidgets.QTableWidgetItem(f"{teo_std:.4f}"))
+            self.tabla_resultados.setItem(3, 1, QtWidgets.QTableWidgetItem(f"{sim_std:.4f}"))
+            self.tabla_resultados.setItem(3, 2, QtWidgets.QTableWidgetItem(f"{abs(teo_std - sim_std):.4f}"))
+            
+            self.lienzo.actualizar_grafica(datos_simulados, es_discreta, titulo=f"Simulación Estocástica - {nombre_dist}")
             self.statusBar().showMessage(f"Cálculo exitoso para {nombre_dist}.", 3000)
 
         except Exception as e:
-            self.label_teorica.setText("Teórica: -- %")
-            self.label_simulada.setText("Simulada: -- %")
+            self.tabla_resultados.clearContents()
             self.lienzo.ax.clear()
             self.lienzo.draw()
-            self.statusBar().showMessage(f"Error en la expresión: {str(e)}", 6000)
+            self.statusBar().showMessage(f"Error en la expresión o parámetros: {str(e)}", 6000)
 
     def exportar_imagen(self):
         ruta_archivo, _ = QtWidgets.QFileDialog.getSaveFileName(

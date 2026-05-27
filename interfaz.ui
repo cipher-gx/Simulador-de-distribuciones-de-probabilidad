@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1050</width>
-    <height>719</height>
+    <width>1100</width>
+    <height>680</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -15,51 +15,30 @@
   </property>
   <property name="styleSheet">
    <string>
-    /* Fondo principal súper oscuro y limpio */
     QMainWindow { background-color: #0d1117; font-family: 'Segoe UI', Roboto, sans-serif; }
-    
-    /* Panel lateral simulando una 'tarjeta' moderna */
     QWidget#panel_controles { background-color: #161b22; border-radius: 12px; border: 1px solid #30363d; }
-    
-    /* Contenedor temporal de la gráfica para que no colapse el espacio */
     QWidget#contenedor_grafica { background-color: #0d1117; border: 2px dashed #30363d; border-radius: 12px; }
-    
-    /* Textos y títulos limpios */
     QLabel { color: #8b949e; font-size: 13px; font-weight: 500; }
     QLabel#lbl_titulo1, QLabel#lbl_titulo2, QLabel#lbl_titulo3 { color: #c9d1d9; font-size: 16px; font-weight: bold; margin-bottom: 5px; margin-top: 10px; }
-    QLabel#label_teorica, QLabel#label_simulada { color: #58a6ff; font-size: 15px; font-weight: bold; }
-    
-    /* Inputs sin bordes toscos, estilo minimalista */
     QLineEdit, QComboBox, QDoubleSpinBox, QSpinBox { background-color: #0d1117; color: #c9d1d9; padding: 8px 12px; border: 1px solid #30363d; border-radius: 6px; font-size: 14px; }
     QLineEdit:focus, QComboBox:focus, QDoubleSpinBox:focus, QSpinBox:focus { border: 1px solid #58a6ff; }
     QComboBox::drop-down { border: none; }
-    
-    /* Botón principal (Call to action) azul vibrante */
     QPushButton#boton_calcular { background-color: #238636; color: white; padding: 12px; border-radius: 6px; font-weight: bold; font-size: 14px; border: none; }
     QPushButton#boton_calcular:hover { background-color: #2ea043; }
-    
-    /* Botón secundario discreto */
     QPushButton#boton_exportar { background-color: transparent; border: 1px solid #30363d; color: #8b949e; padding: 8px 16px; border-radius: 6px; font-weight: bold; }
     QPushButton#boton_exportar:hover { background-color: #30363d; color: #c9d1d9; }
+    QTableWidget { background-color: #0d1117; color: #c9d1d9; gridline-color: #30363d; border: 1px solid #30363d; border-radius: 6px; font-size: 13px; }
+    QHeaderView::section { background-color: #161b22; color: #8b949e; border: 1px solid #30363d; font-weight: bold; padding: 4px; }
+    QTableWidget::item { padding: 5px; }
    </string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QHBoxLayout" name="horizontalLayout" stretch="0,1">
-    <property name="spacing">
-     <number>20</number>
-    </property>
-    <property name="leftMargin">
-     <number>20</number>
-    </property>
-    <property name="topMargin">
-     <number>20</number>
-    </property>
-    <property name="rightMargin">
-     <number>20</number>
-    </property>
-    <property name="bottomMargin">
-     <number>20</number>
-    </property>
+    <property name="spacing"><number>20</number></property>
+    <property name="leftMargin"><number>20</number></property>
+    <property name="topMargin"><number>20</number></property>
+    <property name="rightMargin"><number>20</number></property>
+    <property name="bottomMargin"><number>20</number></property>
     <item>
      <widget class="QWidget" name="panel_controles" native="true">
       <property name="sizePolicy">
@@ -68,503 +47,113 @@
         <verstretch>0</verstretch>
        </sizepolicy>
       </property>
-      <property name="minimumSize">
-       <size>
-        <width>320</width>
-        <height>0</height>
-       </size>
-      </property>
-      <property name="maximumSize">
-       <size>
-        <width>320</width>
-        <height>16777215</height>
-       </size>
-      </property>
+      <property name="minimumSize"><size><width>420</width><height>0</height></size></property>
+      <property name="maximumSize"><size><width>460</width><height>16777215</height></size></property>
       <layout class="QVBoxLayout" name="verticalLayout">
-       <property name="spacing">
-        <number>12</number>
-       </property>
-       <property name="leftMargin">
-        <number>20</number>
-       </property>
-       <property name="topMargin">
-        <number>20</number>
-       </property>
-       <property name="rightMargin">
-        <number>20</number>
-       </property>
-       <property name="bottomMargin">
-        <number>20</number>
-       </property>
-       <item>
-        <widget class="QLabel" name="lbl_titulo1">
-         <property name="text">
-          <string>Distribución</string>
-         </property>
-        </widget>
-       </item>
+       <item><widget class="QLabel" name="lbl_titulo1"><property name="text"><string>Distribución</string></property></widget></item>
        <item>
         <widget class="QComboBox" name="combo_distribuciones">
-         <item>
-          <property name="text">
-           <string>Normal</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Exponencial</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Uniforme</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Bernoulli</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Binomial</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Geométrica</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Hipergeométrica</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Poisson</string>
-          </property>
-         </item>
+         <item><property name="text"><string>Normal</string></property></item>
+         <item><property name="text"><string>Exponencial</string></property></item>
+         <item><property name="text"><string>Uniforme</string></property></item>
+         <item><property name="text"><string>Bernoulli</string></property></item>
+         <item><property name="text"><string>Binomial</string></property></item>
+         <item><property name="text"><string>Geométrica</string></property></item>
+         <item><property name="text"><string>Hipergeométrica</string></property></item>
+         <item><property name="text"><string>Poisson</string></property></item>
         </widget>
        </item>
        <item>
         <widget class="QStackedWidget" name="paginas_variables">
-         <property name="maximumSize">
-          <size>
-           <width>16777215</width>
-           <height>120</height>
-          </size>
-         </property>
-         <property name="currentIndex">
-          <number>0</number>
-         </property>
+         <property name="currentIndex"><number>0</number></property>
+         <property name="maximumSize"><size><width>16777215</width><height>120</height></size></property>
          <widget class="QWidget" name="page_normal">
           <layout class="QFormLayout" name="formLayout_1">
-           <property name="horizontalSpacing">
-            <number>15</number>
-           </property>
-           <item row="0" column="0">
-            <widget class="QLabel" name="lbl_mu">
-             <property name="text">
-              <string>Media (μ):</string>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="1">
-            <widget class="QDoubleSpinBox" name="spin_media">
-             <property name="minimum">
-              <double>-10000.000000000000000</double>
-             </property>
-             <property name="maximum">
-              <double>10000.000000000000000</double>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="0">
-            <widget class="QLabel" name="lbl_sigma">
-             <property name="text">
-              <string>Desviación (σ):</string>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="1">
-            <widget class="QDoubleSpinBox" name="spin_desviacion">
-             <property name="maximum">
-              <double>10000.000000000000000</double>
-             </property>
-             <property name="value">
-              <double>1.000000000000000</double>
-             </property>
-            </widget>
-           </item>
+           <item row="0" column="0"><widget class="QLabel" name="lbl_mu"><property name="text"><string>Media (μ):</string></property></widget></item>
+           <item row="0" column="1"><widget class="QDoubleSpinBox" name="spin_media"><property name="minimum"><double>-10000</double></property><property name="maximum"><double>10000</double></property></widget></item>
+           <item row="1" column="0"><widget class="QLabel" name="lbl_sigma"><property name="text"><string>Desviación (σ):</string></property></widget></item>
+           <item row="1" column="1"><widget class="QDoubleSpinBox" name="spin_desviacion"><property name="minimum"><double>0.0001</double></property><property name="value"><double>1</double></property><property name="maximum"><double>10000</double></property></widget></item>
           </layout>
          </widget>
          <widget class="QWidget" name="page_exponencial">
           <layout class="QFormLayout" name="formLayout_2">
-           <property name="horizontalSpacing">
-            <number>15</number>
-           </property>
-           <item row="0" column="0">
-            <widget class="QLabel" name="lbl_lam1">
-             <property name="text">
-              <string>Tasa (λ):</string>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="1">
-            <widget class="QDoubleSpinBox" name="spin_lambda">
-             <property name="maximum">
-              <double>10000.000000000000000</double>
-             </property>
-             <property name="value">
-              <double>1.000000000000000</double>
-             </property>
-            </widget>
-           </item>
+           <item row="0" column="0"><widget class="QLabel" name="lbl_lam1"><property name="text"><string>Tasa (λ):</string></property></widget></item>
+           <item row="0" column="1"><widget class="QDoubleSpinBox" name="spin_lambda"><property name="minimum"><double>0.0001</double></property><property name="value"><double>1</double></property><property name="maximum"><double>10000</double></property></widget></item>
           </layout>
          </widget>
          <widget class="QWidget" name="page_uniforme">
           <layout class="QFormLayout" name="formLayout_3">
-           <property name="horizontalSpacing">
-            <number>15</number>
-           </property>
-           <item row="0" column="0">
-            <widget class="QLabel" name="lbl_a">
-             <property name="text">
-              <string>Límite Inf. (a):</string>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="1">
-            <widget class="QDoubleSpinBox" name="spin_a">
-             <property name="minimum">
-              <double>-10000.000000000000000</double>
-             </property>
-             <property name="maximum">
-              <double>10000.000000000000000</double>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="0">
-            <widget class="QLabel" name="lbl_b">
-             <property name="text">
-              <string>Límite Sup. (b):</string>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="1">
-            <widget class="QDoubleSpinBox" name="spin_b">
-             <property name="minimum">
-              <double>-10000.000000000000000</double>
-             </property>
-             <property name="maximum">
-              <double>10000.000000000000000</double>
-             </property>
-             <property name="value">
-              <double>1.000000000000000</double>
-             </property>
-            </widget>
-           </item>
+           <item row="0" column="0"><widget class="QLabel" name="lbl_a"><property name="text"><string>Límite Inf. (a):</string></property></widget></item>
+           <item row="0" column="1"><widget class="QDoubleSpinBox" name="spin_a"><property name="minimum"><double>-10000</double></property><property name="maximum"><double>10000</double></property></widget></item>
+           <item row="1" column="0"><widget class="QLabel" name="lbl_b"><property name="text"><string>Límite Sup. (b):</string></property></widget></item>
+           <item row="1" column="1"><widget class="QDoubleSpinBox" name="spin_b"><property name="minimum"><double>-10000</double></property><property name="maximum"><double>10000</double></property><property name="value"><double>1</double></property></widget></item>
           </layout>
          </widget>
          <widget class="QWidget" name="page_bernoulli">
           <layout class="QFormLayout" name="formLayout_4">
-           <property name="horizontalSpacing">
-            <number>15</number>
-           </property>
-           <item row="0" column="0">
-            <widget class="QLabel" name="lbl_p1">
-             <property name="text">
-              <string>Prob. Éxito (p):</string>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="1">
-            <widget class="QDoubleSpinBox" name="spin_p_ber">
-             <property name="maximum">
-              <double>1.000000000000000</double>
-             </property>
-             <property name="singleStep">
-              <double>0.010000000000000</double>
-             </property>
-             <property name="value">
-              <double>0.500000000000000</double>
-             </property>
-            </widget>
-           </item>
+           <item row="0" column="0"><widget class="QLabel" name="lbl_p1"><property name="text"><string>Prob. Éxito (p):</string></property></widget></item>
+           <item row="0" column="1"><widget class="QDoubleSpinBox" name="spin_p_ber"><property name="minimum"><double>0</double></property><property name="maximum"><double>1</double></property><property name="singleStep"><double>0.01</double></property><property name="value"><double>0.5</double></property></widget></item>
           </layout>
          </widget>
          <widget class="QWidget" name="page_binomial">
           <layout class="QFormLayout" name="formLayout_5">
-           <property name="horizontalSpacing">
-            <number>15</number>
-           </property>
-           <item row="0" column="0">
-            <widget class="QLabel" name="lbl_n1">
-             <property name="text">
-              <string>Ensayos (n):</string>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="1">
-            <widget class="QSpinBox" name="spin_n_bin">
-             <property name="maximum">
-              <number>10000</number>
-             </property>
-             <property name="value">
-              <number>10</number>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="0">
-            <widget class="QLabel" name="lbl_p2">
-             <property name="text">
-              <string>Prob. Éxito (p):</string>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="1">
-            <widget class="QDoubleSpinBox" name="spin_p_bin">
-             <property name="maximum">
-              <double>1.000000000000000</double>
-             </property>
-             <property name="singleStep">
-              <double>0.010000000000000</double>
-             </property>
-             <property name="value">
-              <double>0.500000000000000</double>
-             </property>
-            </widget>
-           </item>
+           <item row="0" column="0"><widget class="QLabel" name="lbl_n1"><property name="text"><string>Ensayos (n):</string></property></widget></item>
+           <item row="0" column="1"><widget class="QSpinBox" name="spin_n_bin"><property name="minimum"><number>1</number></property><property name="maximum"><number>10000</number></property><property name="value"><number>10</number></property></widget></item>
+           <item row="1" column="0"><widget class="QLabel" name="lbl_p2"><property name="text"><string>Prob. Éxito (p):</string></property></widget></item>
+           <item row="1" column="1"><widget class="QDoubleSpinBox" name="spin_p_bin"><property name="minimum"><double>0</double></property><property name="maximum"><double>1</double></property><property name="singleStep"><double>0.01</double></property><property name="value"><double>0.5</double></property></widget></item>
           </layout>
          </widget>
          <widget class="QWidget" name="page_geometrica">
           <layout class="QFormLayout" name="formLayout_6">
-           <property name="horizontalSpacing">
-            <number>15</number>
-           </property>
-           <item row="0" column="0">
-            <widget class="QLabel" name="lbl_p3">
-             <property name="text">
-              <string>Prob. Éxito (p):</string>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="1">
-            <widget class="QDoubleSpinBox" name="spin_p_geo">
-             <property name="maximum">
-              <double>1.000000000000000</double>
-             </property>
-             <property name="singleStep">
-              <double>0.010000000000000</double>
-             </property>
-             <property name="value">
-              <double>0.500000000000000</double>
-             </property>
-            </widget>
-           </item>
+           <item row="0" column="0"><widget class="QLabel" name="lbl_p3"><property name="text"><string>Prob. Éxito (p):</string></property></widget></item>
+           <item row="0" column="1"><widget class="QDoubleSpinBox" name="spin_p_geo"><property name="minimum"><double>0.0001</double></property><property name="maximum"><double>1</double></property><property name="singleStep"><double>0.01</double></property><property name="value"><double>0.5</double></property></widget></item>
           </layout>
          </widget>
          <widget class="QWidget" name="page_hipergeometrica">
           <layout class="QFormLayout" name="formLayout_7">
-           <property name="horizontalSpacing">
-            <number>15</number>
-           </property>
-           <item row="0" column="0">
-            <widget class="QLabel" name="lbl_N">
-             <property name="text">
-              <string>Población (N):</string>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="1">
-            <widget class="QSpinBox" name="spin_N_pob">
-             <property name="maximum">
-              <number>100000</number>
-             </property>
-             <property name="value">
-              <number>100</number>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="0">
-            <widget class="QLabel" name="lbl_K">
-             <property name="text">
-              <string>Éxitos Pob. (K):</string>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="1">
-            <widget class="QSpinBox" name="spin_K_exitos">
-             <property name="maximum">
-              <number>100000</number>
-             </property>
-             <property name="value">
-              <number>20</number>
-             </property>
-            </widget>
-           </item>
-           <item row="2" column="0">
-            <widget class="QLabel" name="lbl_n2">
-             <property name="text">
-              <string>Muestra (n):</string>
-             </property>
-            </widget>
-           </item>
-           <item row="2" column="1">
-            <widget class="QSpinBox" name="spin_n_muestra">
-             <property name="maximum">
-              <number>100000</number>
-             </property>
-             <property name="value">
-              <number>10</number>
-             </property>
-            </widget>
-           </item>
+           <item row="0" column="0"><widget class="QLabel" name="lbl_N"><property name="text"><string>Población (N):</string></property></widget></item>
+           <item row="0" column="1"><widget class="QSpinBox" name="spin_N_pob"><property name="minimum"><number>1</number></property><property name="maximum"><number>100000</number></property><property name="value"><number>100</number></property></widget></item>
+           <item row="1" column="0"><widget class="QLabel" name="lbl_K"><property name="text"><string>Éxitos Pob. (K):</string></property></widget></item>
+           <item row="1" column="1"><widget class="QSpinBox" name="spin_K_exitos"><property name="minimum"><number>0</number></property><property name="maximum"><number>100000</number></property><property name="value"><number>20</number></property></widget></item>
+           <item row="2" column="0"><widget class="QLabel" name="lbl_n2"><property name="text"><string>Muestra (n):</string></property></widget></item>
+           <item row="2" column="1"><widget class="QSpinBox" name="spin_n_muestra"><property name="minimum"><number>1</number></property><property name="maximum"><number>100000</number></property><property name="value"><number>10</number></property></widget></item>
           </layout>
          </widget>
          <widget class="QWidget" name="page_poisson">
           <layout class="QFormLayout" name="formLayout_8">
-           <property name="horizontalSpacing">
-            <number>15</number>
-           </property>
-           <item row="0" column="0">
-            <widget class="QLabel" name="lbl_lam2">
-             <property name="text">
-              <string>Promedio (λ):</string>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="1">
-            <widget class="QDoubleSpinBox" name="spin_lam_poi">
-             <property name="maximum">
-              <double>10000.000000000000000</double>
-             </property>
-             <property name="value">
-              <double>1.000000000000000</double>
-             </property>
-            </widget>
-           </item>
+           <item row="0" column="0"><widget class="QLabel" name="lbl_lam2"><property name="text"><string>Promedio (λ):</string></property></widget></item>
+           <item row="0" column="1"><widget class="QDoubleSpinBox" name="spin_lam_poi"><property name="minimum"><double>0.0001</double></property><property name="value"><double>1</double></property><property name="maximum"><double>10000</double></property></widget></item>
           </layout>
          </widget>
         </widget>
        </item>
+       <item><widget class="QLabel" name="lbl_titulo2"><property name="text"><string>Parámetros de Simulación</string></property></widget></item>
+       <item><widget class="QLabel" name="lbl_exp"><property name="text"><string>Expresión Matemática (ej. 7 &lt; X &lt; 9):</string></property></widget></item>
+       <item><widget class="QLineEdit" name="input_expresion"><property name="placeholderText"><string>Ingresa el límite...</string></property></widget></item>
+       <item><widget class="QLabel" name="lbl_iter"><property name="text"><string>Tamaño de Muestra (Iteraciones):</string></property></widget></item>
+       <item><widget class="QSpinBox" name="spin_iteraciones"><property name="minimum"><number>1</number></property><property name="maximum"><number>5000000</number></property><property name="value"><number>100000</number></property></widget></item>
+       <item><widget class="QPushButton" name="boton_calcular"><property name="text"><string>Ejecutar Simulación</string></property><property name="cursor"><cursorShape>PointingHandCursor</cursorShape></property></widget></item>
+       <item><widget class="QLabel" name="lbl_titulo3"><property name="text"><string>Resultados Estadísticos</string></property></widget></item>
        <item>
-        <widget class="QLabel" name="lbl_titulo2">
-         <property name="text">
-          <string>Parámetros de Simulación</string>
-         </property>
+        <widget class="QTableWidget" name="tabla_resultados">
+         <property name="editTriggers"><set>QAbstractItemView::NoEditTriggers</set></property>
+         <property name="selectionMode"><enum>QAbstractItemView::NoSelection</enum></property>
+         <property name="rowCount"><number>5</number></property>
+         <property name="columnCount"><number>3</number></property>
+         <attribute name="horizontalHeaderLabels">
+          <string>Teórico;Simulado;Diferencia</string>
+         </attribute>
+         <attribute name="verticalHeaderLabels">
+          <string>Probabilidad;Media;Varianza;Desviación Est.;Tamaño Muestra</string>
+         </attribute>
+         <attribute name="horizontalHeaderStretchLastSection"><bool>true</bool></attribute>
         </widget>
-       </item>
-       <item>
-        <widget class="QLabel" name="lbl_exp">
-         <property name="text">
-          <string>Expresión Matemática (ej. 7 &lt; X &lt; 9):</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLineEdit" name="input_expresion">
-         <property name="placeholderText">
-          <string>Ingresa el límite...</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLabel" name="lbl_iter">
-         <property name="text">
-          <string>Iteraciones:</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QSpinBox" name="spin_iteraciones">
-         <property name="maximum">
-          <number>5000000</number>
-         </property>
-         <property name="value">
-          <number>100000</number>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <spacer name="spacer_mid">
-         <property name="orientation">
-          <enum>Qt::Orientation::Vertical</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>20</width>
-           <height>10</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item>
-        <widget class="QPushButton" name="boton_calcular">
-         <property name="cursor">
-          <cursorShape>PointingHandCursor</cursorShape>
-         </property>
-         <property name="text">
-          <string>Ejecutar Simulación</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <spacer name="spacer_mid2">
-         <property name="orientation">
-          <enum>Qt::Orientation::Vertical</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>20</width>
-           <height>15</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item>
-        <widget class="QLabel" name="lbl_titulo3">
-         <property name="text">
-          <string>Resultados</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLabel" name="label_teorica">
-         <property name="text">
-          <string>Teórica: -- %</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLabel" name="label_simulada">
-         <property name="text">
-          <string>Simulada: -- %</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <spacer name="verticalSpacer">
-         <property name="orientation">
-          <enum>Qt::Orientation::Vertical</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>20</width>
-           <height>40</height>
-          </size>
-         </property>
-        </spacer>
        </item>
       </layout>
      </widget>
     </item>
     <item>
      <layout class="QVBoxLayout" name="panel_derecho">
-      <property name="spacing">
-       <number>15</number>
-      </property>
       <item>
        <widget class="QWidget" name="contenedor_grafica" native="true">
         <property name="sizePolicy">
@@ -574,18 +163,10 @@
          </sizepolicy>
         </property>
         <layout class="QVBoxLayout" name="layout_grafica">
-         <property name="leftMargin">
-          <number>0</number>
-         </property>
-         <property name="topMargin">
-          <number>0</number>
-         </property>
-         <property name="rightMargin">
-          <number>0</number>
-         </property>
-         <property name="bottomMargin">
-          <number>0</number>
-         </property>
+         <property name="leftMargin"><number>0</number></property>
+         <property name="topMargin"><number>0</number></property>
+         <property name="rightMargin"><number>0</number></property>
+         <property name="bottomMargin"><number>0</number></property>
         </layout>
        </widget>
       </item>
@@ -593,25 +174,14 @@
        <layout class="QHBoxLayout" name="layout_boton_exportar">
         <item>
          <spacer name="horizontalSpacer">
-          <property name="orientation">
-           <enum>Qt::Orientation::Horizontal</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>40</width>
-            <height>20</height>
-           </size>
-          </property>
+          <property name="orientation"><enum>Qt::Horizontal</enum></property>
+          <property name="sizeHint" stdset="0"><size><width>40</width><height>20</height></size></property>
          </spacer>
         </item>
         <item>
          <widget class="QPushButton" name="boton_exportar">
-          <property name="cursor">
-           <cursorShape>PointingHandCursor</cursorShape>
-          </property>
-          <property name="text">
-           <string>Exportar Gráfica</string>
-          </property>
+          <property name="text"><string>Exportar Gráfica</string></property>
+          <property name="cursor"><cursorShape>PointingHandCursor</cursorShape></property>
          </widget>
         </item>
        </layout>
@@ -620,6 +190,7 @@
     </item>
    </layout>
   </widget>
+  <widget class="QStatusBar" name="statusbar"/>
  </widget>
  <resources/>
  <connections/>
