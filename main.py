@@ -1,5 +1,6 @@
 import sys
 import numpy as np
+import scipy.stats as stats
 from PyQt6 import QtWidgets, uic
 from PyQt6.QtCore import Qt  
 from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg as FigureCanvas
@@ -33,7 +34,7 @@ class Lienzo(FigureCanvas):
         self.ax.spines['right'].set_color('none')
         self.ax.spines['left'].set_color('#30363d')
 
-    def actualizar_grafica(self, datos, es_discreta, titulo="Distribución"):
+    def actualizar_grafica(self, datos, es_discreta, indice=None, params=None, titulo="Distribución"):
         self.ax.clear()
         if datos is None or len(datos) == 0:
             self.draw()
@@ -42,12 +43,45 @@ class Lienzo(FigureCanvas):
         if es_discreta:
             valores, frecuencias = np.unique(datos, return_counts=True)
             probabilidades = frecuencias / len(datos)
-            self.ax.bar(valores, probabilidades, color='#58a6ff', alpha=0.8, width=0.4, edgecolor='#0d1117', zorder=3)
+            self.ax.bar(valores, probabilidades, color='#58a6ff', alpha=0.8, width=0.4, edgecolor='#0d1117', zorder=3, label="Simulado")
             self.ax.set_ylabel("Probabilidad Empírica")
             self.ax.set_xticks(valores)
         else:
-            self.ax.hist(datos, bins=50, density=True, color='#238636', alpha=0.7, edgecolor='#0d1117', zorder=3)
+            self.ax.hist(datos, bins=50, density=True, color='#238636', alpha=0.7, edgecolor='#0d1117', zorder=3, label="Simulado")
             self.ax.set_ylabel("Densidad de Probabilidad")
+
+        if params is not None:
+            if es_discreta:
+                x_teo = np.arange(int(min(datos)), int(max(datos)) + 1)
+                y_teo = np.zeros_like(x_teo, dtype=float)
+                
+                if indice == 3:   # Bernoulli
+                    y_teo = stats.bernoulli.pmf(x_teo, params['p'])
+                elif indice == 4: # Binomial
+                    y_teo = stats.binom.pmf(x_teo, params['n'], params['p'])
+                elif indice == 5: # Geométrica
+                    y_teo = stats.geom.pmf(x_teo, params['p'])
+                elif indice == 6: # Hipergeométrica
+                    y_teo = stats.hypergeom.pmf(x_teo, params['N'], params['K'], params['n_m'])
+                elif indice == 7: # Poisson
+                    y_teo = stats.poisson.pmf(x_teo, params['lam'])
+                
+                self.ax.plot(x_teo, y_teo, color='#ff7b72', marker='o', linestyle='dashed', linewidth=2, markersize=6, label="Teórico", zorder=4)
+                
+            else:
+                x_teo = np.linspace(min(datos), max(datos), 200)
+                y_teo = np.zeros_like(x_teo, dtype=float)
+                
+                if indice == 0:   # Normal
+                    y_teo = stats.norm.pdf(x_teo, loc=params['mu'], scale=params['sigma'])
+                elif indice == 1: # Exponencial
+                    y_teo = stats.expon.pdf(x_teo, scale=1/params['lam'])
+                elif indice == 2: # Uniforme
+                    y_teo = stats.uniform.pdf(x_teo, loc=params['a'], scale=params['b'] - params['a'])
+                
+                self.ax.plot(x_teo, y_teo, color='#ff7b72', linewidth=2.5, label="Teórico", zorder=4)
+
+            self.ax.legend(facecolor='#161b22', edgecolor='#30363d', labelcolor='#c9d1d9')
 
         self.ax.set_title(titulo, fontsize=12, fontweight='bold')
         self.ax.set_xlabel("Variable Aleatoria (X)")
@@ -92,31 +126,40 @@ class MiSimulador(QtWidgets.QMainWindow):
         nombre_dist = self.combo_distribuciones.currentText()
         instancia = None
         es_discreta = False
+        params = {}
 
         try:
             if indice == 0:
                 instancia = Normal(self.spin_media.value(), self.spin_desviacion.value())
+                params = {'mu': self.spin_media.value(), 'sigma': self.spin_desviacion.value()}
                 es_discreta = False
             elif indice == 1:
                 instancia = Exponencial(self.spin_lambda.value())
+                params = {'lam': self.spin_lambda.value()}
                 es_discreta = False
             elif indice == 2:
                 instancia = Uniforme(self.spin_a.value(), self.spin_b.value())
+                params = {'a': self.spin_a.value(), 'b': self.spin_b.value()}
                 es_discreta = False
             elif indice == 3:
                 instancia = Bernoulli(self.spin_p_ber.value())
+                params = {'p': self.spin_p_ber.value()}
                 es_discreta = True
             elif indice == 4:
                 instancia = Binomial(self.spin_n_bin.value(), self.spin_p_bin.value())
+                params = {'n': self.spin_n_bin.value(), 'p': self.spin_p_bin.value()}
                 es_discreta = True
             elif indice == 5:
                 instancia = Geometrica(self.spin_p_geo.value())
+                params = {'p': self.spin_p_geo.value()}
                 es_discreta = True
             elif indice == 6:
                 instancia = Hipergeometrica(n=self.spin_n_muestra.value(), k=self.spin_K_exitos.value(), N=self.spin_N_pob.value())
+                params = {'n_m': self.spin_n_muestra.value(), 'K': self.spin_K_exitos.value(), 'N': self.spin_N_pob.value()}
                 es_discreta = True
             elif indice == 7:
                 instancia = Poisson(self.spin_lam_poi.value())
+                params = {'lam': self.spin_lam_poi.value()}
                 es_discreta = True
 
             teorica, simulada, datos_simulados = instancia.evaluar_expresion(texto_expresion, iteraciones_ui)
@@ -145,7 +188,7 @@ class MiSimulador(QtWidgets.QMainWindow):
             self.tabla_resultados.setItem(3, 1, QtWidgets.QTableWidgetItem(f"{sim_std:.4f}"))
             self.tabla_resultados.setItem(3, 2, QtWidgets.QTableWidgetItem(f"{abs(teo_std - sim_std):.4f}"))
             
-            self.lienzo.actualizar_grafica(datos_simulados, es_discreta, titulo=f"Simulación Estocástica - {nombre_dist}")
+            self.lienzo.actualizar_grafica(datos_simulados, es_discreta, indice, params, titulo=f"Simulación Estocástica - {nombre_dist}")
             self.statusBar().showMessage(f"Cálculo exitoso para {nombre_dist}.", 3000)
 
         except Exception as e:
